@@ -1,0 +1,60 @@
+@model List<SimpleInventoryApp.Models.Item>
+
+<div class="container mt-4">
+    <div class="card border-0 shadow-sm rounded-4 p-3">
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>📦 Daftar Barang</h2>
+            <br /><span class="text-muted small">@Model.Count item</span>
+        </div>
+    
+        <div id="loading" class="text-center my-3" style="display:none;">
+            <div class="spinner-border text-primary"></div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari nama item..."
+                           value="@Context.Request.Query["search"]" />
+                    <button class="btn btn-primary">Search</button>
+                </div>
+            </form>
+            <a href="/Item/Create" class="btn btn-dark rounded-pill px-3">+ Tambah Barang</a>
+        </div>
+    
+        <div id="itemContainer">
+            <partial name="_ItemTable" model="Model" />
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function loadData(page) {
+            let search = document.querySelector('input[name="search"]').value;
+            document.getElementById('loading').style.display = 'block';
+
+            fetch(`/Item/GetItems?page=${page}&search=${search}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('itemContainer').innerHTML = html;
+                    document.getElementById('loading').style.display = 'none';
+                });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('page-number')) {
+                e.preventDefault();
+                let page = e.target.getAttribute('data-page');
+                loadData(page);
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            loadData(1);
+        });
+    </script>
+}

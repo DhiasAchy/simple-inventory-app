@@ -1,0 +1,74 @@
+@model List<SimpleInventoryApp.Models.Item>
+
+<div class="table-responsive">
+    <table class="table align-middle custom-table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th class="text-end">Stock</th>
+                <th class="text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        Tidak ada data
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td class="text-end">@item.Stock</td>
+                        <td class="text-center">
+                            <a href="/Item/Edit/@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                            @* <a href="/Item/Delete/@item.Id" class="btn btn-danger btn-sm">Delete</a> *@
+                            <a href="/Item/Delete/@item.Id" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Yakin mau hapus data ini?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            
+        </tbody>
+    </table>
+</div>
+
+@* PAGINATION *@
+<nav>
+    <ul class="pagination">
+
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="?page=@(ViewBag.CurrentPage - 1)&search=@ViewBag.Search">Previous</a>
+            </li>
+        }
+
+        <!-- 🔢 NOMOR HALAMAN -->
+        @for (int i = Math.Max(1, ViewBag.CurrentPage - 2);
+                                                                                                    i <= Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2); i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="?page=@i&search=@ViewBag.Search">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="?page=@(ViewBag.CurrentPage + 1)&search=@ViewBag.Search">Next</a>
+            </li>
+        }
+
+    </ul>
+</nav>

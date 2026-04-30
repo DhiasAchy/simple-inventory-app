@@ -1,0 +1,16 @@
+@model SimpleInventoryApp.Models.Item
+
+<h2>Tambah Barang</h2>
+
+<form method="post">
+    <label for="Name">Nama:</label>
+    <input type="text" id="Name" name="Name" class="form-control" required />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    
+    <label for="Stock">Stock:</label>
+    <input type="number" id="Stock" name="Stock" class="form-control" required />
+    <span asp-validation-for="Stock" class="text-danger"></span>
+    
+    <br />
+    <button type="submit" class="btn btn-primary">Simpan</button>
+</form>

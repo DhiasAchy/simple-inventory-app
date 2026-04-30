@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container my-5">
+    <h1 class="mb-3">Dashboard</h1>
+    <p>Welcome, <strong>@ViewBag.Username</strong> 👋</p>
+
+    <div class="row my-4">
+
+        <!-- Total Item -->
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Item</h6>
+                    <h2 class="fw-bold">@ViewBag.TotalItems</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Stock -->
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Stock</h6>
+                    <h2 class="fw-bold">@ViewBag.TotalStock</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-4">
+            <h4>Statistik Inventory</h4>
+            <canvas id="inventoryChart" style="height:300px;"></canvas>
+        </div>
+        <div class="col-12 mt-5">
+            <h4>Stock per Item</h4>
+            <canvas id="itemChart" style="height:300px;"></canvas>
+        </div>
+
+    </div>
+
+    <div class="my-5">
+        <a href="/Item" class="btn btn-dark">📦 Kelola Item</a>
+    </div>
+</div>
+
+<div class="text-center mt-4 d-none">
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('inventoryChart');
+
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: ['Total Item', 'Total Stock'],
+        datasets: [{
+        label: 'Data Inventory',
+        data: [@ViewBag.TotalItems, @ViewBag.TotalStock],
+        borderWidth: 1
+        }]
+        },
+        options: {
+        responsive: true
+        }
+        });
+    </script>
+
+    <script>
+        const itemNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ItemNames));
+        const itemStocks = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ItemStocks));
+
+        const ctx2 = document.getElementById('itemChart');
+
+        if (ctx2) {
+        new Chart(ctx2, {
+        type: 'bar',
+        data: {
+        labels: itemNames,
+        datasets: [{
+        label: 'Stock per Item',
+        data: itemStocks,
+        borderWidth: 1
+        }]
+        },
+        options: {
+        responsive: true
+        }
+        });
+        }
+    </script>
+}
